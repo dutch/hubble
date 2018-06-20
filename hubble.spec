@@ -9,6 +9,9 @@ License:        GPLv3+
 URL:            https://github.com/dutch/%{name}
 Source0:        https://github.com/dutch/%{name}/archive/master.tar.gz#/%{name}-%{version}-%{release}.tar.gz
 BuildRequires:  gcc
+BuildRequires:  make
+BuildRequires:  autoconf
+BuildRequires:  automake
 
 
 %description
@@ -16,10 +19,11 @@ Hubble is a CI client for GitHub.
 
 
 %prep
-%setup -q
+%autosetup -n %{name}-master
 
 
 %build
+autoreconf -i
 %configure
 make %{?_smp_mflags}
 
@@ -30,7 +34,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%doc COPYING
+%license COPYING
 %{_bindir}/%{name}
 %{_libexecdir}/%{name}/responder
 
