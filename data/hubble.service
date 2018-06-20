@@ -1,0 +1,11 @@
+[Unit]
+Description=Hubble CI Client
+After=network-online.service
+Wants=network-online.service
+
+[Service]
+ExecStart=/usr/bin/hubble
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.targt
