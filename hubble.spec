@@ -11,7 +11,7 @@ Source0:        https://github.com/dutch/%{name}/archive/master.tar.gz#/%{name}-
 BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  autoconf
-BuildRequires:  automake
+BuildRequires:  autotools-latest
 
 
 %description
@@ -23,7 +23,7 @@ Hubble is a CI client for GitHub.
 
 
 %build
-autoreconf -i
+scl enable autotools-latest 'autoreconf -i'
 %configure
 make %{?_smp_mflags}
 
