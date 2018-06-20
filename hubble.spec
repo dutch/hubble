@@ -35,15 +35,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
-%systemd_post data/%{name}.service
+%systemd_post %{name}.service
 
 
 %preun
-%systemd_preun data/%{name}.service
+%systemd_preun %{name}.service
 
 
 %postun
-%systemd_postun_with_restart data/%{name}.service
+%systemd_postun_with_restart %{name}.service
 
 
 %files
