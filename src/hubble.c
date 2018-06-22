@@ -32,23 +32,23 @@ int bind_to_port(const char *port, char *err, size_t errlen) {
   hints.ai_flags = AI_PASSIVE;
 
   if ((res = getaddrinfo(NULL, "5000", &hints, &info)) != 0) {
-    snprintf(err, errlen, "getaddrinfo: %s\n", gai_strerror(res));
+    snprintf(err, errlen, "getaddrinfo: %s", gai_strerror(res));
     goto done;
   }
 
   for (p = info; p != NULL; p = p->ai_next) {
     if ((sockfd = socket(p->ai_family, p->ai_socktype | SOCK_NONBLOCK | SOCK_CLOEXEC, p->ai_protocol)) == -1) {
-      perror("socket");
+      snprintf(err, errlen, "socket: %s", strerror(errno));
       continue;
     }
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-      perror("setsockopt");
+      snprintf(err, errlen, "sockopt: %s", strerror(errno));
       goto clean1;
     }
 
     if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-      perror("bind");
+      snprintf(err, errlen, "bind: %s", strerror(errno));
       close(sockfd);
       goto clean1;
     }
