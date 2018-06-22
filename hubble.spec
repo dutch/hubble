@@ -10,8 +10,8 @@ URL:            https://github.com/dutch/%{name}
 Source0:        https://github.com/dutch/%{name}/archive/master.tar.gz#/%{name}-%{version}-%{release}.tar.gz
 BuildRequires:  gcc
 BuildRequires:  make
+BuildRequires:  autoconf
 BuildRequires:  autotools-latest
-BuildRequires:  pkgconfig
 %{?systemd_requires}
 BuildRequires:  pkgconfig(systemd)
 
