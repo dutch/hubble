@@ -3,7 +3,7 @@
 
 Name:           hubble
 Version:        %{version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Continuous integration client for GitHub
 License:        GPLv3+
 URL:            https://github.com/dutch/%{name}
