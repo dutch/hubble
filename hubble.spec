@@ -26,7 +26,7 @@ Hubble is a CI client for GitHub.
 
 
 %build
-scl enable autotools-latest 'autoreconf -i'
+ACLOCAL_PATH=/usr/share/aclocal scl enable autotools-latest 'autoreconf -i'
 %configure
 make %{?_smp_mflags}
 
