@@ -3,18 +3,16 @@
 
 Name:           hubble
 Version:        %{version}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Continuous integration client for GitHub
 License:        GPLv3+
 URL:            https://github.com/dutch/%{name}
 Source0:        https://github.com/dutch/%{name}/archive/master.tar.gz#/%{name}-%{version}-%{release}.tar.gz
 BuildRequires:  gcc
 BuildRequires:  make
-BuildRequires:  autoconf
-BuildRequires:  automake
 BuildRequires:  autotools-latest
-%{?systemd_requires}
 BuildRequires:  pkgconfig(systemd)
+%{?systemd_requires}
 
 
 %description
