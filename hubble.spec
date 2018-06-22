@@ -11,6 +11,7 @@ Source0:        https://github.com/dutch/%{name}/archive/master.tar.gz#/%{name}-
 BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  autotools-latest
+BuildRequires:  pkgconfig
 %{?systemd_requires}
 BuildRequires:  pkgconfig(systemd)
 
