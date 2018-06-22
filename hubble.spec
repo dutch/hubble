@@ -12,7 +12,7 @@ BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  autotools-latest
 %{?systemd_requires}
-BuildRequires:  systemd
+BuildRequires:  pkgconfig(systemd)
 
 
 %description
