@@ -3,7 +3,7 @@
 
 Name:           hubble
 Version:        %{version}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Continuous integration client for GitHub
 License:        GPLv3+
 URL:            https://github.com/dutch/%{name}
@@ -13,6 +13,7 @@ BuildRequires:  make
 BuildRequires:  autotools-latest
 BuildRequires:  pkgconfig(systemd)
 %{?systemd_requires}
+Requires(pre):  /usr/sbin/useradd, /usr/bin/getent
 
 
 %description
@@ -32,6 +33,10 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 %make_install
+
+
+%pre
+/usr/bin/getent passwd %{name} || /usr/sbin/useradd -b %{_sharedstatedir} -m -r -s /sbin/nologin -U %{name}
 
 
 %post

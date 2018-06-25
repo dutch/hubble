@@ -1,6 +1,9 @@
 #define _GNU_SOURCE
 #define MAXERR 256
-#define MAXBUF 16384
+#define MAXBUF 64
+#define TYPE_EOF 0
+#define TYPE_HEADER_KEY 1
+#define TYPE_HEADER_VALUE 2
 
 #include "picohttpparser.h"
 #include <stdio.h>
@@ -72,9 +75,10 @@ void *get_in_addr(struct sockaddr *sa) {
 }
 
 int main(int argc, char **argv) {
-  char ch, err[MAXERR], buf[MAXBUF], *meth, *path;
-  int ret, epfd, sigfd, nfds, nbytes, sockfd, connfd, ver, i;
-  size_t methlen, pathlen, nheaders;
+  char ch, err[MAXERR], buf[MAXBUF];
+  int ret, epfd, sigfd, nfds, nbytes, sockfd, connfd, type;
+  size_t buflen;
+  off_t off;
   ssize_t res;
   sigset_t mask;
   pid_t pid;
@@ -82,7 +86,6 @@ int main(int argc, char **argv) {
   socklen_t socklen;
   struct sockaddr_storage client;
   struct signalfd_siginfo fdsi;
-  struct phr_header headers[32];
 
   ret = EXIT_FAILURE;
   nheaders = 32;
@@ -180,19 +183,14 @@ int main(int argc, char **argv) {
       }
 
       else if (evs[nfds].events & EPOLLIN) {
-        if ((res = recv(evs[nfds].data.fd, buf, MAXBUF, 0)) == -1) {
-          perror("recv");
-          goto done;
-        }
+        while ((res = recv(evs[nfds].data.fd, buf, MAXBUF, 0)) > 0) {
+          if (res == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
+            perror("recv");
+            goto done;
+          }
+	}
 
-        phr_parse_request(buf, res, &meth, &methlen, &path, &pathlen, &ver, headers, &nheaders, 0);
-        printf("method is %.*s\n", methlen, meth);
-        printf("path is %.*s\n", pathlen, path);
-        printf("headers:\n");
-        for (i = 0; i < nheaders; ++i)
-          printf("%.*s: %.*s\n", headers[i].name_len, headers[i].name, headers[i].value_len, headers[i].value);
-
-        evs[nfds].events = EPOLLOUT | EPOLLET;
+	evs[nfds].events = EPOLLOUT | EPOLLET;
 
         if (epoll_ctl(epfd, EPOLL_CTL_MOD, evs[nfds].data.fd, &evs[nfds]) == -1) {
           perror("epoll_ctl");
@@ -213,7 +211,7 @@ int main(int argc, char **argv) {
 
         case 0:
           sigprocmask(SIG_UNBLOCK, &mask, NULL);
-          execl("/home/centos/hubble/_build/sub/src/responder", "responder", NULL);
+          execl(EXECDIR "/responder", "responder", NULL);
 
         default:
           break;
