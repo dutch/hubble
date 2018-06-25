@@ -75,10 +75,8 @@ void *get_in_addr(struct sockaddr *sa) {
 }
 
 int main(int argc, char **argv) {
-  char ch, err[MAXERR], buf[MAXBUF];
-  int ret, epfd, sigfd, nfds, nbytes, sockfd, connfd, type;
-  size_t buflen;
-  off_t off;
+  char err[MAXERR], buf[MAXBUF];
+  int ret, epfd, sigfd, nfds, sockfd, connfd;
   ssize_t res;
   sigset_t mask;
   pid_t pid;
@@ -88,7 +86,6 @@ int main(int argc, char **argv) {
   struct signalfd_siginfo fdsi;
 
   ret = EXIT_FAILURE;
-  nheaders = 32;
 
   sigemptyset(&mask);
   sigaddset(&mask, SIGINT);
@@ -221,9 +218,6 @@ int main(int argc, char **argv) {
   }
 
   ret = EXIT_SUCCESS;
-
-clean1:
-  close(sockfd);
 
 done:
   return ret;
