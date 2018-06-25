@@ -13,7 +13,7 @@ BuildRequires:  make
 BuildRequires:  autotools-latest
 BuildRequires:  pkgconfig(systemd)
 %{?systemd_requires}
-Requires(pre):  /usr/sbin/useradd, /usr/bin/getent
+Requires(pre):  shadow-utils
 
 
 %description
@@ -36,7 +36,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %pre
-/usr/bin/getent passwd %{name} || /usr/sbin/useradd -b %{_sharedstatedir} -m -r -s /sbin/nologin -U %{name}
+getent group %{name} >/dev/null || groupadd -r %{name}
+getent passwd %{name} >/dev/null || useradd -r -g %{name} -d %{_sharedstatedir}/%{name} -s /sbin/nologin -c "Hubble service user" %{name}
+exit 0
 
 
 %post
